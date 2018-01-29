@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.emfpoll.emfpoll.HomeActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:gravity="center"
+        >
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="371dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/homeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/voteHome"
+                        android:layout_alignBottom="@+id/voteHome"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="30dp"
+                        android:fontFamily="sans-serif-smallcaps"
+                        android:text="Complétez le Poll de votre ami !"
+                        android:textColor="@android:color/holo_orange_dark" />
+
+                    <EditText
+
+                        android:id="@+id/codeInputText"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/homeLabel"
+                        android:inputType="numberDecimal"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+
+
+                    <Button
+                        android:id="@+id/voteHome"
+                        android:layout_width="45dp"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:text=">" />
+
+                </RelativeLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <Button
+                    android:id="@+id/homeNewPoll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Creez &#10; votre sondage&#10; avec EMF Poll" />
+            </TableRow>
+
+            <!-- Le tableau pour la liste des sondages créé-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
+                    android:textAlignment="gravity">
+
+                    <TableRow
+                        android:background="#607D8B"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Vos sondages"
+                            android:textAlignment="center" />
+                    </TableRow>
+
+                    <TableRow
+                        android:background="@android:color/darker_gray"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Repas de ce soir" />
+                    </TableRow>
+
+                    <TableRow
+                        android:background="@android:color/darker_gray"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Taxi ou train" />
+                    </TableRow>
+
+                    <TableRow
+                        android:background="@android:color/darker_gray"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Sortie de cet été" />
+                    </TableRow>
+                </TableLayout>
+            </TableRow>
+
+        </TableLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/appentry"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </GridView>
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

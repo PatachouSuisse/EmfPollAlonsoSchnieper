@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.emfpoll.emfpoll.MainActivity">
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="410dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="69dp">
+
+            <Button
+                android:id="@+id/goHomeTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="quick Home" />
+
+            <Button
+                android:id="@+id/goNewTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="quick new" />
+
+            <Button
+                android:id="@+id/goVoteTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="quick vote" />
+
+            <Button
+                android:id="@+id/goAnswerTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="quick answer" />
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
