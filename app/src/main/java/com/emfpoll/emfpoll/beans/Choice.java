@@ -10,7 +10,6 @@ public class Choice {
 
     private int pkChoice;
     private String text;
-    private boolean multiple;
     private Question question;
     private ArrayList<Vote> votes;
 
@@ -20,17 +19,15 @@ public class Choice {
         this.pkChoice = pkChoice;
     }
 
-    public Choice(String text, boolean multiple, Question question, ArrayList<Vote> votes) {
+    public Choice(String text, Question question, ArrayList<Vote> votes) {
         this.text = text;
-        this.multiple = multiple;
         this.question = question;
         this.votes = votes;
     }
 
-    public Choice(int pkChoice, String text, boolean multiple, Question question, ArrayList<Vote> votes) {
+    public Choice(int pkChoice, String text, Question question, ArrayList<Vote> votes) {
         this.pkChoice = pkChoice;
         this.text = text;
-        this.multiple = multiple;
         this.question = question;
         this.votes = votes;
     }
@@ -51,20 +48,20 @@ public class Choice {
         this.text = text;
     }
 
-    public boolean isMultiple() {
-        return multiple;
-    }
-
-    public void setMultiple(boolean multiple) {
-        this.multiple = multiple;
-    }
-
     public Question getQuestion() {
         return question;
     }
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public ArrayList<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<Vote> votes) {
+        this.votes = votes;
     }
 
     @Override

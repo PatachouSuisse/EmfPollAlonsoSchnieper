@@ -15,9 +15,12 @@ import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
 import com.emfpoll.emfpoll.beans.Vote;
 import com.emfpoll.emfpoll.tasks.CreateSurveyTask;
+import com.emfpoll.emfpoll.tasks.GetSurveyListTask;
+import com.emfpoll.emfpoll.tasks.GetSurveyTask;
 import com.emfpoll.emfpoll.tasks.VoteTask;
 import com.emfpoll.emfpoll.wrk.WrkDB;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -139,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 WrkDB db = WrkDB.getInstance();
                 ArrayList<Choice> choices1 = new ArrayList<>();
-                choices1.add(new Choice("Choix 1", true, null, null));
-                choices1.add(new Choice("Choix 2", true, null, null));
+                choices1.add(new Choice("Choix 1", null, null));
+                choices1.add(new Choice("Choix 2", null, null));
                 ArrayList<Choice> choices2 = new ArrayList<>();
-                choices2.add(new Choice("Choix 1", true, null, null));
+                choices2.add(new Choice("Choix 1", null, null));
                 ArrayList<Question> questions = new ArrayList<>();
-                questions.add(new Question(choices1, "question 1", null));
-                questions.add(new Question(choices2, "question 2", null));
+                questions.add(new Question(choices1, "question 1", false, null));
+                questions.add(new Question(choices2, "question 2", false, null));
                 String androidId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
                 Survey survey = new Survey(questions, "Test !", new Date(), null, androidId);
                 try {
@@ -162,7 +165,33 @@ public class MainActivity extends AppCompatActivity {
         buttonGetSurvey = findViewById(R.id.testGetSurvey);
         buttonGetSurvey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                WrkDB db = WrkDB.getInstance();
+                Survey survey = null;
+                try {
+                    survey = new GetSurveyTask().execute(6).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(survey);
+                System.out.println(survey.getCreatorid());
+                System.out.println(survey.getPkSurvey());
+                System.out.println(survey.getStart());
+                for(Question q : survey.getQuestions()) {
+                    System.out.println("QUESTION");
+                    System.out.println(q);
+                    System.out.println(q.getPkQuestion());
+                    System.out.println(q.isMultiple());
+                    for(Choice c : q.getChoices()) {
+                        System.out.println("CHOIX");
+                        System.out.println(c);
+                        System.out.println(c.getPkChoice());
+                        for(Vote v : c.getVotes()) {
+                            System.out.println("VOTE");
+                            System.out.println(v.getVisitorid());
+                        }
+                    }
+                }
             }
         });
 
@@ -170,7 +199,16 @@ public class MainActivity extends AppCompatActivity {
         buttonGetSurveyList = findViewById(R.id.testGetSurveyList);
         buttonGetSurveyList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                WrkDB db = WrkDB.getInstance();
+                String androidId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                ArrayList<Survey> surveys = null;
+                try {
+                    surveys = new GetSurveyListTask().execute(androidId).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(surveys);
             }
         });
 

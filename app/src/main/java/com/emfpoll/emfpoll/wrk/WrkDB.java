@@ -188,18 +188,18 @@ public class WrkDB {
                 int fkSurvey = surveyKey.getInt(1);
                 for(Question question : survey.getQuestions()) {
                     Log.i(LOG_TAG, "================ QUESTION " + question + " =================");
-                    ResultSet questionKey = insert("INSERT INTO t_question (fk_survey, title) VALUES (?,?)",
+                    ResultSet questionKey = insert("INSERT INTO t_question (fk_survey, title, multiple) VALUES (?,?,?)",
                             fkSurvey,
-                            question.getTitle());
+                            question.getTitle(),
+                            question.isMultiple());
                     if(questionKey.first()) {
                         Log.i(LOG_TAG, "================ QUESTION INSERE =================");
                         int fkQuestion = questionKey.getInt(1);
                         for(Choice choice : question.getChoices()) {
                             Log.i(LOG_TAG, "================ CHOIX " + choice + " =================");
-                            ResultSet rs = insert("INSERT INTO t_choice (fk_question, text, multiple) VALUES (?,?,?)",
+                            ResultSet rs = insert("INSERT INTO t_choice (fk_question, text) VALUES (?,?)",
                                     fkQuestion,
-                                    choice.getText(),
-                                    choice.isMultiple());
+                                    choice.getText());
                             if(!rs.first()) {
                                 Log.i(LOG_TAG, "================ CHOIX PAS INSERE =================");
                                 con.rollback();
@@ -249,24 +249,24 @@ public class WrkDB {
                         rsSurvey.getDate("start"),
                         rsSurvey.getDate("end"),
                         rsSurvey.getString("creatorid"));
-                ResultSet rsQuestions = select("SELECT pk_question, title FROM t_question WHERE fk_survey = ?", pkSurvey);
+                ResultSet rsQuestions = select("SELECT pk_question, title, multiple FROM t_question WHERE fk_survey = ?", pkSurvey);
                 while(rsQuestions.next()) {
                     ArrayList<Choice> choices = new ArrayList<>();
                     Question question = new Question(rsQuestions.getInt("pk_question"),
                             choices,
                             rsQuestions.getString("title"),
+                            rsQuestions.getBoolean("multiple"),
                             survey);
-                    ResultSet rsChoices = select("SELECT pk_choice, fk_question, text, multiple FROM t_choice WHERE fk_question = ?", rsQuestions.getInt("pk_question"));
+                    ResultSet rsChoices = select("SELECT pk_choice, fk_question, text FROM t_choice WHERE fk_question = ?", rsQuestions.getInt("pk_question"));
                     while(rsChoices.next()) {
                         ArrayList<Vote> votes = new ArrayList<>();
                         Choice choice = new Choice(rsChoices.getInt("pk_choice"),
                                 rsChoices.getString("text"),
-                                rsChoices.getBoolean("multiple"),
                                 question,
                                 votes);
-                        ResultSet rsVotes = select("SELECT visitorid FROM r_votes WHERE fk_choice = ?", rsChoices.getInt("pk_choice"));
+                        ResultSet rsVotes = select("SELECT visitorid FROM r_vote WHERE fk_choice = ?", rsChoices.getInt("pk_choice"));
                         while(rsVotes.next()) {
-                            votes.add(new Vote(choice, rsChoices.getString("visitorid")));
+                            votes.add(new Vote(choice, rsVotes.getString("visitorid")));
                         }
                         choices.add(choice);
                     }
