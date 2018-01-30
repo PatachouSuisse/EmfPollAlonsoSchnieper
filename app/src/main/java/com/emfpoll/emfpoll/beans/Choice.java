@@ -1,5 +1,7 @@
 package com.emfpoll.emfpoll.beans;
 
+import java.util.ArrayList;
+
 /**
  * Created by SchnieperN on 29.01.2018.
  */
@@ -10,6 +12,7 @@ public class Choice {
     private String text;
     private boolean multiple;
     private Question question;
+    private ArrayList<Vote> votes;
 
     public Choice() {}
 
@@ -17,11 +20,12 @@ public class Choice {
         this.pkChoice = pkChoice;
     }
 
-    public Choice(int pkChoiceString, String text, boolean multiple, Question question) {
+    public Choice(int pkChoiceString, String text, boolean multiple, Question question, ArrayList<Vote> votes) {
         this.pkChoice = pkChoice;
         this.text = text;
         this.multiple = multiple;
         this.question = question;
+        this.votes = votes;
     }
 
     public int getPkChoice() {
@@ -54,6 +58,11 @@ public class Choice {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    @Override
+    public String toString() {
+        return text;
     }
 
 }

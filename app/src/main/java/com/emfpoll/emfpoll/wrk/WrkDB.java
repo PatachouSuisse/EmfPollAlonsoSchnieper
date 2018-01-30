@@ -193,10 +193,17 @@ public class WrkDB {
                             survey);
                     ResultSet rsChoices = select("SELECT pk_choice, fk_question, text, multiple FROM t_choice WHERE fk_question = ?", rsQuestions.getInt("pk_question"));
                     while(rsChoices.next()) {
-                        choices.add(new Choice(rsChoices.getInt("pk_choice"),
+                        ArrayList<Vote> votes = new ArrayList<>();
+                        Choice choice = new Choice(rsChoices.getInt("pk_choice"),
                                 rsChoices.getString("text"),
                                 rsChoices.getBoolean("multiple"),
-                                question));
+                                question,
+                                votes);
+                        ResultSet rsVotes = select("SELECT visitorid FROM r_votes WHERE fk_choice = ?", rsChoices.getInt("pk_choice"));
+                        while(rsVotes.next()) {
+                            votes.add(new Vote(choice, rsChoices.getString("visitorid")));
+                        }
+                        choices.add(choice);
                     }
                     questions.add(question);
                 }

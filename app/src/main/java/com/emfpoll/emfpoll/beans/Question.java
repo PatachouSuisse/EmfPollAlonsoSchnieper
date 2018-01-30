@@ -58,4 +58,9 @@ public class Question {
         this.survey = survey;
     }
 
+    @Override
+    public String toString() {
+        return title;
+    }
+
 }

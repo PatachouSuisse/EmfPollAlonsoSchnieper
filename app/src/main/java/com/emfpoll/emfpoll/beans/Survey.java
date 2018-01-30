@@ -79,4 +79,9 @@ public class Survey {
         this.creatorid = creatorid;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
