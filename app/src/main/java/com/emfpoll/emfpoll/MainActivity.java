@@ -1,6 +1,7 @@
 package com.emfpoll.emfpoll;
 
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,17 +11,23 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private boolean dev = true;
-    private static final String LOG_TAG =
-            MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button buttonGoHome;
     Button buttonCreatePoll;
     Button buttonVote;
     Button buttonAnswer;
 
+    NotificationCompat.Builder notification;
+    private static final int uniqueID = 45612;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         Log.d(LOG_TAG, "============================ Main loaded");
         if (dev) {
             //Application de débug
@@ -35,25 +42,26 @@ public class MainActivity extends AppCompatActivity {
     //Init states
     private void devApp() {
         setContentView(R.layout.activity_main);
-        initButtonDev();
+                initButtonDev();
     }
 
     private void prodApp() {
-        Intent myIntent = new Intent(MainActivity.this,
-                HomeActivity.class);
+        Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(myIntent);
     }
 
     //Charge les bouton de l'ihm main, dev.
     private void initButtonDev() {
+
         Log.d(LOG_TAG, "============== Start initButtonDev");
         buttonGoHome = findViewById(R.id.goHomeTest);
         buttonGoHome.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 Log.d(LOG_TAG, "============================ start Home load");
+
+
                 // Start NewActivity.class
-                Intent myIntent = new Intent(MainActivity.this,
-                        HomeActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(myIntent);
             }
         });
@@ -64,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 Log.d(LOG_TAG, "============================ start Create load");
                 // Start NewActivity.class
-                Intent myIntent = new Intent(MainActivity.this,
-                        NewActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, NewActivity.class);
                 startActivity(myIntent);
             }
         });
@@ -75,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 Log.d(LOG_TAG, "============================ start Vote load");
                 // Start NewActivity.class
-                Intent myIntent = new Intent(MainActivity.this,
-                        VoteActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, VoteActivity.class);
                 startActivity(myIntent);
             }
         });
@@ -87,8 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 Log.d(LOG_TAG, "============================ start Answer load");
                 // Start NewActivity.class
-                Intent myIntent = new Intent(MainActivity.this,
-                        AnswerActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, AnswerActivity.class);
                 startActivity(myIntent);
             }
         });

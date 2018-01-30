@@ -34,14 +34,14 @@ public class WrkDB {
 
     private WrkDB() {
         try {
-            if (con == null || (con != null && con.isClosed())) {
+            if (con == null || con.isClosed()) {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
                 Log.d(LOG_TAG, "============================ Start DB connection ("+ HOST + ":" + PORT + "/" + SCHEMA+") ============================");
                 con = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + SCHEMA, USER, PASSWORD);
                 Log.d(LOG_TAG, "============================ End DB connection ("+con+") ============================");
             }
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            //handle...
+            Log.e(LOG_TAG, "Exception //private WrkDB()// : "+ex.getMessage());
         }
     }
 
@@ -121,12 +121,12 @@ public class WrkDB {
             }
             return true;
         } catch (SQLException ex) {
-            //log...
+            Log.e(LOG_TAG, "Exception //public boolean vote(ArrayList<Vote> votes)// : "+ex.getMessage());
         } finally {
             try {
                 con.setAutoCommit(true);
             } catch (SQLException ex) {
-                //handle...
+                Log.e(LOG_TAG, "Exception //public boolean vote(ArrayList<Vote> votes)// : "+ex.getMessage());
             }
         }
         return false;
@@ -166,12 +166,12 @@ public class WrkDB {
                 return null;
             }
         } catch (SQLException ex) {
-            //log...
+            Log.e(LOG_TAG, "Exception //public Integer createSurvey(Survey survey)// : "+ex.getMessage());
         } finally {
             try {
                 con.setAutoCommit(true);
             } catch (SQLException ex) {
-                //log...
+                Log.e(LOG_TAG, "Exception //public Integer createSurvey(Survey survey)// : "+ex.getMessage());
             }
         }
         return null;
@@ -184,11 +184,12 @@ public class WrkDB {
      * @return Le sondage à récupérer
      */
     public Survey getSurvey(int pkSurvey) {
+        Survey survey = null;
         try {
             ResultSet rsSurvey = select("SELECT creatorid, name, start, end FROM t_survey WHERE pk_survey = ?", pkSurvey);
             if(rsSurvey.first()) {
                 ArrayList<Question> questions = new ArrayList<>();
-                Survey survey = new Survey(pkSurvey,
+                survey = new Survey(pkSurvey,
                         questions,
                         rsSurvey.getString("name"),
                         rsSurvey.getDate("start"),
@@ -217,12 +218,11 @@ public class WrkDB {
                     }
                     questions.add(question);
                 }
-                return survey;
             }
         } catch (SQLException e) {
-            //handle...
+            Log.e(LOG_TAG, "Exception // public Survey getSurvey(int pkSurvey)// : "+e.getMessage());
         }
-        return null;
+        return survey;
     }
 
     /**
@@ -230,12 +230,13 @@ public class WrkDB {
      *
      * @param creatorId L'identifiant du créateur
      * @return La liste des sondages demandés
-     * @throws SQLException
+     * @throws SQLException SqlException
      */
     public ArrayList<Survey> getSurveyList(String creatorId) throws SQLException {
+        ArrayList<Survey> surveys = null;
         try {
             ResultSet rsSurvey = select("SELECT pk_survey, name, start, end FROM t_survey WHERE creatorid = ?", creatorId);
-            ArrayList<Survey> surveys = new ArrayList<>();
+            surveys = new ArrayList<>();
             while(rsSurvey.next()) {
                 surveys.add(new Survey(rsSurvey.getInt("pk_survey"),
                         null,
@@ -244,11 +245,10 @@ public class WrkDB {
                         rsSurvey.getDate("end"),
                         creatorId));
             }
-            return surveys;
         } catch (SQLException e) {
-            //handle...
+            Log.e(LOG_TAG, "Exception //public ArrayList<Survey> getSurveyList(String creatorId) throws SQLException// : "+e.getMessage());
         }
-        return null;
+        return surveys;
     }
 
 }
