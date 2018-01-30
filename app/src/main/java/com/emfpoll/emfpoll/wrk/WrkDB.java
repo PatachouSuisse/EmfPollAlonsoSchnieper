@@ -1,10 +1,7 @@
 package com.emfpoll.emfpoll.wrk;
 
-<<<<<<< HEAD
 import android.os.AsyncTask;
 import android.os.Looper;
-=======
->>>>>>> 47dde5df7a26f8dc7afb68ec49c799f3f322125a
 import android.util.Log;
 
 import com.emfpoll.emfpoll.beans.Choice;
@@ -93,7 +90,7 @@ public class WrkDB {
 
     public ResultSet select(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        Log.d(LOG_TAG, "***************// Sql select executed ("+query+") //***************");
+        Log.d(LOG_TAG, "***************// Sql select executed ("+ps+") //***************");
         return preparePreparedStatement(ps, o).executeQuery();
     }
 
@@ -290,6 +287,7 @@ public class WrkDB {
      * @throws SQLException SqlException
      */
     public ArrayList<Survey> getSurveyList(String creatorId) {
+        ArrayList<Survey> surveys = null;
         try {
             ResultSet rsSurvey = select("SELECT pk_survey, name, start, end FROM t_survey WHERE creatorid = ?", creatorId);
             surveys = new ArrayList<>();
