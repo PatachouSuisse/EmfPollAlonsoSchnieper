@@ -1,5 +1,7 @@
 package com.emfpoll.emfpoll.wrk;
 
+import android.util.Log;
+
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
@@ -25,6 +27,8 @@ public class WrkDB {
     private final String SCHEMA = "";
     private final String USER = "schniepern_emfpoll";
     private final String PASSWORD = "emf+po123ll";
+    private static final String LOG_TAG =
+            WrkDB.class.getSimpleName();
 
     private Connection con;
 
@@ -32,7 +36,9 @@ public class WrkDB {
         try {
             if (con == null || (con != null && con.isClosed())) {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
+                Log.d(LOG_TAG, "============================ Start DB connection ("+ HOST + ":" + PORT + "/" + SCHEMA+") ============================");
                 con = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + SCHEMA, USER, PASSWORD);
+                Log.d(LOG_TAG, "============================ End DB connection ("+con+") ============================");
             }
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             //handle...
@@ -49,21 +55,25 @@ public class WrkDB {
 
     public ResultSet select(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "***************// Sql select executed ("+query+") //***************");
         return preparePreparedStatement(ps, o).executeQuery();
     }
 
     public ResultSet insert(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "***************// Sql insert executed ("+query+") //***************");
         preparePreparedStatement(ps, o).executeUpdate();
         return ps.getGeneratedKeys();
     }
 
     public int delete(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "***************// Sql delete executed ("+query+") //***************");
         return preparePreparedStatement(ps, o).executeUpdate();
     }
 
     public int update(String query, Object... o) throws SQLException {
+        Log.d(LOG_TAG, "***************// Sql update executed ("+query+") //***************");
         return delete(query, o);
     }
 

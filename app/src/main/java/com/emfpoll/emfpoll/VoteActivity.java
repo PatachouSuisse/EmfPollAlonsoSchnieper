@@ -18,7 +18,7 @@ public class VoteActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
         initButtonVote();
-        Log.d(LOG_TAG, "============================ Answer loaded");
+        Log.d(LOG_TAG, "============================ vote loaded");
     }
 
     //Charge les boutons de l'ihm principale HOME
