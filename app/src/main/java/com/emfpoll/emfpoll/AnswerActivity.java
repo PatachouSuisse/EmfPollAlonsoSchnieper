@@ -28,7 +28,7 @@ public class AnswerActivity extends Activity {
         buttonGoHome = findViewById(R.id.goHomeAnswer);
         buttonGoHome.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                Log.d(LOG_TAG, "============================ start goHome load");
+                Log.d(LOG_TAG, "============================ start buttonGoHome load");
                 // Start NewActivity.class
                 Intent myIntent = new Intent(AnswerActivity.this,
                         HomeActivity.class);
@@ -40,10 +40,11 @@ public class AnswerActivity extends Activity {
 
 
         buttonSharePoll = findViewById(R.id.sharePoll);
+        Log.d(LOG_TAG, "============================ start ");
         buttonSharePoll.setOnClickListener(new View.OnClickListener() {
                                                @Override
                                                public void onClick(View v) {
-                                                   String message = "Salut ! J'ai créé un nouveau sondage sur EmfPoll, tu peux participer grâce à ce code : ";
+                                                   String message = "Salut ! J'ai créé un nouveau sondage sur EmfPoll, tu peux participer avec ce code : ";
                                                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                                                    sharingIntent.setType("text/plain");
                                                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "\n\n");

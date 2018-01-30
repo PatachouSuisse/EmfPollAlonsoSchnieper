@@ -1,7 +1,10 @@
 package com.emfpoll.emfpoll.wrk;
 
+<<<<<<< HEAD
 import android.os.AsyncTask;
 import android.os.Looper;
+=======
+>>>>>>> 47dde5df7a26f8dc7afb68ec49c799f3f322125a
 import android.util.Log;
 
 import com.emfpoll.emfpoll.beans.Choice;
@@ -90,11 +93,13 @@ public class WrkDB {
 
     public ResultSet select(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "***************// Sql select executed ("+query+") //***************");
         return preparePreparedStatement(ps, o).executeQuery();
     }
 
     public ResultSet insert(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "***************// Sql insert executed ("+query+") //***************");
         preparePreparedStatement(ps, o).executeUpdate();
         return ps.getGeneratedKeys();
     }
@@ -106,10 +111,12 @@ public class WrkDB {
 
     /*public int delete(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        Log.d(LOG_TAG, "*************** Sql delete executed ("+query+") ***************");
         return preparePreparedStatement(ps, o).executeUpdate();
-    }
+}
 
     public int update(String query, Object... o) throws SQLException {
+        Log.d(LOG_TAG, "*************** Sql update executed ("+query+") ***************");
         return delete(query, o);
     }*/
 
@@ -161,12 +168,12 @@ public class WrkDB {
             Log.i(LOG_TAG, "================ CHOIX INSERES =================");
             return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Log.e(LOG_TAG, "Exception //public boolean vote(ArrayList<Vote> votes)// : "+ex.getMessage());
         } finally {
             try {
                 con.setAutoCommit(true);
             } catch (SQLException ex) {
-                //handle...
+                Log.e(LOG_TAG, "Exception //public boolean vote(ArrayList<Vote> votes)// : "+ex.getMessage());
             }
         }
         return false;
@@ -216,12 +223,12 @@ public class WrkDB {
                 return null;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Log.e(LOG_TAG, "Exception //public Integer createSurvey(Survey survey)// : "+ex.getMessage());
         } finally {
             try {
                 con.setAutoCommit(true);
             } catch (SQLException ex) {
-                //log...
+                Log.e(LOG_TAG, "Exception //public Integer createSurvey(Survey survey)// : "+ex.getMessage());
             }
         }
         return null;
@@ -234,11 +241,12 @@ public class WrkDB {
      * @return Le sondage à récupérer
      */
     public Survey getSurvey(int pkSurvey) {
+        Survey survey = null;
         try {
             ResultSet rsSurvey = select("SELECT creatorid, name, start, end FROM t_survey WHERE pk_survey = ?", pkSurvey);
             if(rsSurvey.first()) {
                 ArrayList<Question> questions = new ArrayList<>();
-                Survey survey = new Survey(pkSurvey,
+                survey = new Survey(pkSurvey,
                         questions,
                         rsSurvey.getString("name"),
                         rsSurvey.getDate("start"),
@@ -267,12 +275,11 @@ public class WrkDB {
                     }
                     questions.add(question);
                 }
-                return survey;
             }
         } catch (SQLException e) {
-            //handle...
+            Log.e(LOG_TAG, "Exception // public Survey getSurvey(int pkSurvey)// : "+e.getMessage());
         }
-        return null;
+        return survey;
     }
 
     /**
@@ -280,12 +287,12 @@ public class WrkDB {
      *
      * @param creatorId L'identifiant du créateur
      * @return La liste des sondages demandés
-     * @throws SQLException
+     * @throws SQLException SqlException
      */
     public ArrayList<Survey> getSurveyList(String creatorId) {
         try {
             ResultSet rsSurvey = select("SELECT pk_survey, name, start, end FROM t_survey WHERE creatorid = ?", creatorId);
-            ArrayList<Survey> surveys = new ArrayList<>();
+            surveys = new ArrayList<>();
             while(rsSurvey.next()) {
                 surveys.add(new Survey(rsSurvey.getInt("pk_survey"),
                         null,
@@ -294,11 +301,10 @@ public class WrkDB {
                         rsSurvey.getDate("end"),
                         creatorId));
             }
-            return surveys;
         } catch (SQLException e) {
-            //handle...
+            Log.e(LOG_TAG, "Exception //public ArrayList<Survey> getSurveyList(String creatorId) throws SQLException// : "+e.getMessage());
         }
-        return null;
+        return surveys;
     }
 
 }

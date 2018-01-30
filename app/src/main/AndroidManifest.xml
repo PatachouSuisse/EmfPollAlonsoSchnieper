@@ -12,7 +12,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -21,7 +20,10 @@
         <activity android:name=".AnswerActivity" />
         <activity android:name=".VoteActivity" />
     </application>
+<<<<<<< HEAD
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+=======
+>>>>>>> 47dde5df7a26f8dc7afb68ec49c799f3f322125a
 </manifest>
