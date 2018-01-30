@@ -19,6 +19,12 @@ public class Question {
         this.pkQuestion = pkQuestion;
     }
 
+    public Question(ArrayList<Choice> choices, String title, Survey survey) {
+        this.choices = choices;
+        this.title = title;
+        this.survey = survey;
+    }
+
     public Question(int pkQuestion, ArrayList<Choice> choices, String title, Survey survey) {
         this.pkQuestion = pkQuestion;
         this.choices = choices;

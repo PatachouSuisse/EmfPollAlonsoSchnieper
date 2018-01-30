@@ -1,11 +1,25 @@
 package com.emfpoll.emfpoll;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.emfpoll.emfpoll.beans.Choice;
+import com.emfpoll.emfpoll.beans.Question;
+import com.emfpoll.emfpoll.beans.Survey;
+import com.emfpoll.emfpoll.beans.Vote;
+import com.emfpoll.emfpoll.tasks.CreateSurveyTask;
+import com.emfpoll.emfpoll.tasks.VoteTask;
+import com.emfpoll.emfpoll.wrk.WrkDB;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     Button buttonCreatePoll;
     Button buttonVote;
     Button buttonAnswer;
+    Button buttonTestVote;
+    Button buttonCreateSurvey;
+    Button buttonGetSurvey;
+    Button buttonGetSurveyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +110,65 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+
+        buttonTestVote = findViewById(R.id.testVote);
+        buttonTestVote.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                ArrayList<Vote> votes = new ArrayList<>();
+                String androidId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                votes.add(new Vote(new Choice(1), androidId));
+                try {
+                    System.out.println(new VoteTask().execute(votes).get());
+                } catch (InterruptedException e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        buttonCreateSurvey = findViewById(R.id.testCreateSurvey);
+        buttonCreateSurvey.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                WrkDB db = WrkDB.getInstance();
+                ArrayList<Choice> choices1 = new ArrayList<>();
+                choices1.add(new Choice("Choix 1", true, null, null));
+                choices1.add(new Choice("Choix 2", true, null, null));
+                ArrayList<Choice> choices2 = new ArrayList<>();
+                choices2.add(new Choice("Choix 1", true, null, null));
+                ArrayList<Question> questions = new ArrayList<>();
+                questions.add(new Question(choices1, "question 1", null));
+                questions.add(new Question(choices2, "question 2", null));
+                String androidId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                Survey survey = new Survey(questions, "Test !", new Date(), null, androidId);
+                try {
+                    System.out.println(new CreateSurveyTask().execute(survey).get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        buttonGetSurvey = findViewById(R.id.testGetSurvey);
+        buttonGetSurvey.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                WrkDB db = WrkDB.getInstance();
+            }
+        });
+
+
+        buttonGetSurveyList = findViewById(R.id.testGetSurveyList);
+        buttonGetSurveyList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                WrkDB db = WrkDB.getInstance();
+            }
+        });
+
         Log.d(LOG_TAG, "============== End initButtonDev");
     }
 }

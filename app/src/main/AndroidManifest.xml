@@ -22,4 +22,6 @@
         <activity android:name=".VoteActivity" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\SchnieperN\Desktop\EmfPollAlonsoSchnieper\AndroidProject.iml" filepath="C:\Users\SchnieperN\Desktop\EmfPollAlonsoSchnieper\AndroidProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/EmfPollAlonsoSchnieper.iml" filepath="$PROJECT_DIR$/EmfPollAlonsoSchnieper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gradle-wrapper/gradle-wrapper.iml" filepath="$PROJECT_DIR$/gradle-wrapper/gradle-wrapper.iml" />

@@ -1,5 +1,9 @@
 package com.emfpoll.emfpoll.wrk;
 
+import android.os.AsyncTask;
+import android.os.Looper;
+import android.util.Log;
+
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
@@ -13,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by alonsolopeza on 29.01.2018.
@@ -22,25 +27,61 @@ public class WrkDB {
 
     private final String HOST = "schniepern.emf-informatique.ch";
     private final String PORT = "3306";
-    private final String SCHEMA = "";
+    private final String SCHEMA = "schniepern_emfpoll";
     private final String USER = "schniepern_emfpoll";
     private final String PASSWORD = "emf+po123ll";
+    private static final String LOG_TAG = WrkDB.class.getSimpleName();
 
     private Connection con;
 
     private WrkDB() {
         try {
-            if (con == null || (con != null && con.isClosed())) {
+            if (con == null || con.isClosed()) {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                con = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + SCHEMA, USER, PASSWORD);
+                String url = "jdbc:mysql://" + HOST + ":" + PORT + "/" + SCHEMA;
+                Log.d(LOG_TAG, "============================ Start DB connection ("+url+") ============================");
+                con = DriverManager.getConnection(url, USER, PASSWORD);
+                Log.d(LOG_TAG, "============================ End DB connection ("+con+") ============================");
+            } else {
+                Log.d(LOG_TAG, "============================ Connection already open ("+con+") ============================");
             }
-        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            //handle...
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            Log.e(LOG_TAG, ex.getMessage());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
         }
     }
 
     private static class Holder {
-        private static final WrkDB INSTANCE = new WrkDB();
+        private static final WrkDB INSTANCE;
+
+        static {
+            WrkDB temp = null;
+            try {
+                //Check if in UI thread
+                if(Looper.myLooper() == Looper.getMainLooper()) {
+                    temp = new ConnectTask().execute().get();
+                } else {
+                    temp = new WrkDB();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            INSTANCE = temp;
+        }
+
+        private static class ConnectTask extends AsyncTask<Void, Void, WrkDB> {
+            @Override
+            protected WrkDB doInBackground(Void... voids) {
+                return new WrkDB();
+            }
+        }
+
     }
 
     public static WrkDB getInstance() {
@@ -58,14 +99,19 @@ public class WrkDB {
         return ps.getGeneratedKeys();
     }
 
-    public int delete(String query, Object... o) throws SQLException {
+    public int insertCount(String query, Object... o) throws SQLException {
+        PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        return preparePreparedStatement(ps, o).executeUpdate();
+    }
+
+    /*public int delete(String query, Object... o) throws SQLException {
         PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         return preparePreparedStatement(ps, o).executeUpdate();
     }
 
     public int update(String query, Object... o) throws SQLException {
         return delete(query, o);
-    }
+    }*/
 
     private PreparedStatement preparePreparedStatement(PreparedStatement ps, Object... objects) {
         int i = 1;
@@ -100,18 +146,22 @@ public class WrkDB {
     }
 
     public boolean vote(ArrayList<Vote> votes) {
+        Log.i(LOG_TAG, "================ INSERTION VOTE... =================");
         boolean success = false;
         try {
             con.setAutoCommit(false);
             for(Vote vote : votes) {
-                ResultSet rs = insert("INSERT INTO r_vote (fk_choice, visitorid) VALUES (?,?)", vote.getChoice().getPkChoice(), vote.getVisitorid());
-                if(!rs.first()) {
+                int count = insertCount("INSERT INTO r_vote (fk_choice, visitorid) VALUES (?,?)", vote.getChoice().getPkChoice(), vote.getVisitorid());
+                Log.d(LOG_TAG, count + "");
+                if(count == 0) {
+                    Log.i(LOG_TAG, "================ PAS INSERE =================");
                     return false;
                 }
             }
+            Log.i(LOG_TAG, "================ CHOIX INSERES =================");
             return true;
         } catch (SQLException ex) {
-            //log...
+            ex.printStackTrace();
         } finally {
             try {
                 con.setAutoCommit(true);
@@ -130,33 +180,43 @@ public class WrkDB {
                     survey.getName(),
                     survey.getStart());
             if(surveyKey.first()) {
+                Log.i(LOG_TAG, "================ SURVEY INSERE =================");
                 int fkSurvey = surveyKey.getInt(1);
                 for(Question question : survey.getQuestions()) {
-                    ResultSet questionKey = insert("INSERT INTO t_survey (fk_survey, title) VALUES (?,?)",
+                    Log.i(LOG_TAG, "================ QUESTION " + question + " =================");
+                    ResultSet questionKey = insert("INSERT INTO t_question (fk_survey, title) VALUES (?,?)",
                             fkSurvey,
                             question.getTitle());
                     if(questionKey.first()) {
+                        Log.i(LOG_TAG, "================ QUESTION INSERE =================");
                         int fkQuestion = questionKey.getInt(1);
                         for(Choice choice : question.getChoices()) {
+                            Log.i(LOG_TAG, "================ CHOIX " + choice + " =================");
                             ResultSet rs = insert("INSERT INTO t_choice (fk_question, text, multiple) VALUES (?,?,?)",
                                     fkQuestion,
                                     choice.getText(),
                                     choice.isMultiple());
                             if(!rs.first()) {
+                                Log.i(LOG_TAG, "================ CHOIX PAS INSERE =================");
                                 con.rollback();
                                 return null;
                             }
+                            Log.i(LOG_TAG, "================ CHOIX INSERE =================");
                         }
                     } else {
+                        Log.e(LOG_TAG, "================ QUESTION PAS INSERE =================");
+                        con.rollback();
                         return null;
                     }
                 }
                 return fkSurvey;
             } else {
+                Log.e(LOG_TAG, "================ SURVEY PAS INSERE =================");
+                con.rollback();
                 return null;
             }
         } catch (SQLException ex) {
-            //log...
+            ex.printStackTrace();
         } finally {
             try {
                 con.setAutoCommit(true);
@@ -222,7 +282,7 @@ public class WrkDB {
      * @return La liste des sondages demandés
      * @throws SQLException
      */
-    public ArrayList<Survey> getSurveyList(String creatorId) throws SQLException {
+    public ArrayList<Survey> getSurveyList(String creatorId) {
         try {
             ResultSet rsSurvey = select("SELECT pk_survey, name, start, end FROM t_survey WHERE creatorid = ?", creatorId);
             ArrayList<Survey> surveys = new ArrayList<>();

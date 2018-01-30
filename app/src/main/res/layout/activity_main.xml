@@ -43,6 +43,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="quick answer" />
+
+            <Button
+                android:id="@+id/testVote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="vote" />
+
+            <Button
+                android:id="@+id/testCreateSurvey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="create survey" />
+
+            <Button
+                android:id="@+id/testGetSurvey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="get survey" />
+
+            <Button
+                android:id="@+id/testGetSurveyList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="get survey list" />
+
         </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

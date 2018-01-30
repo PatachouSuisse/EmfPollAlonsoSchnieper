@@ -22,6 +22,14 @@ public class Survey {
         this.pkSurvey = pkSurvey;
     }
 
+    public Survey(ArrayList<Question> questions, String name, Date start, Date end, String creatorid) {
+        this.questions = questions;
+        this.name = name;
+        this.start = start;
+        this.end = end;
+        this.creatorid = creatorid;
+    }
+
     public Survey(int pkSurvey, ArrayList<Question> questions, String name, Date start, Date end, String creatorid) {
         this.pkSurvey = pkSurvey;
         this.questions = questions;

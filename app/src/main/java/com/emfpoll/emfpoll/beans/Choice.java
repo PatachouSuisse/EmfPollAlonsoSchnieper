@@ -20,7 +20,14 @@ public class Choice {
         this.pkChoice = pkChoice;
     }
 
-    public Choice(int pkChoiceString, String text, boolean multiple, Question question, ArrayList<Vote> votes) {
+    public Choice(String text, boolean multiple, Question question, ArrayList<Vote> votes) {
+        this.text = text;
+        this.multiple = multiple;
+        this.question = question;
+        this.votes = votes;
+    }
+
+    public Choice(int pkChoice, String text, boolean multiple, Question question, ArrayList<Vote> votes) {
         this.pkChoice = pkChoice;
         this.text = text;
         this.multiple = multiple;
