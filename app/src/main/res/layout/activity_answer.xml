@@ -53,7 +53,7 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
-                android:id="@+id/layoutnew"
+                android:id="@+id/layoutanswer"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 android:layout_weight="1"
@@ -84,18 +84,6 @@
 
                 <Space
                     android:layout_width="59dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/deletePoll"
-                    android:layout_width="184dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Supprimer" />
-
-                <Space
-                    android:layout_width="64dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 

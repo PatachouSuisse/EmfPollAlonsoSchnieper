@@ -3,22 +3,24 @@ package com.emfpoll.emfpoll;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
+import com.emfpoll.emfpoll.tasks.GetSurveyTask;
 import com.emfpoll.emfpoll.wrk.WrkDB;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class VoteActivity extends Activity {
@@ -34,34 +36,77 @@ public class VoteActivity extends Activity {
         setContentView(R.layout.activity_vote);
 
         wrkDb = WrkDB.getInstance();
-        Survey survey = wrkDb.getSurvey(7);
+        Survey survey = null;
+        try {
+            survey = new GetSurveyTask().execute(getIntent().getIntExtra("pk_survey", -1)).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         Log.d(LOG_TAG, "============================ vote for this survey : " + survey);
         //
         if (survey != null) {
             //Le champs ou générer toutes les réponse possibles
-            final LinearLayout linearParent = (LinearLayout) findViewById(R.id.layoutnew);
+            final LinearLayout linearParent = findViewById(R.id.layoutpoll);
             //création du champs du sondage
             final TextView pollTitle = (TextView) findViewById(R.id.questionLabel);
             pollTitle.setText(survey.getName());
             //Question dynamique
             ArrayList<Question> questions = survey.getQuestions();
             for (Question question : questions) {
-                final TextView questionTextView = (TextView) findViewById(R.id.questionLabel);
+                LinearLayout layoutQuestion = new LinearLayout(VoteActivity.this);
+                layoutQuestion.setOrientation(LinearLayout.VERTICAL);
+                final TextView questionTextView = new TextView(VoteActivity.this);
                 questionTextView.setText(question.getTitle());
-                linearParent.addView(questionTextView);
+                layoutQuestion.addView(questionTextView);
                 //Choix dynamique
                 ArrayList<Choice> choices = question.getChoices();
-                for (Choice choice : choices) {
-                    final TextView answerDynamic = new EditText(VoteActivity.this);
-                    answerDynamic.setId((int) a);
-                    answerDynamic.setWidth(48);
-                    answerDynamic.setHeight(48);
-                    answerDynamic.setEms(10);
-                    answerDynamic.setText(choice.getText());
-                    answerDynamic.setTextSize(14);
-                    a++;
-                    linearParent.addView(answerDynamic);
+                //TODO utiliser un layout pour les choix ou prendre le premier enfant comme titre ?
+                if(question.isMultiple()) {
+                    //TODO aligner question et checkbox
+                    LinearLayout choicesLayout = new LinearLayout(VoteActivity.this);
+                    LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
+                    choiceLayout.setOrientation(LinearLayout.VERTICAL);
+                    LinearLayout checkLayout = new LinearLayout(VoteActivity.this);
+                    checkLayout.setOrientation(LinearLayout.VERTICAL);
+                    for (Choice choice : choices) {
+                        TextView answerDynamic = new TextView(VoteActivity.this);
+                        answerDynamic.setWidth(48);
+                        answerDynamic.setHeight(48);
+                        answerDynamic.setEms(10);
+                        answerDynamic.setText(choice.getText());
+                        answerDynamic.setTextSize(14);
+                        choiceLayout.addView(answerDynamic);
+                        CheckBox choiceCheckBox = new CheckBox(VoteActivity.this);
+                        checkLayout.addView(choiceCheckBox);
+                    }
+                    choicesLayout.addView(choiceLayout);
+                    choicesLayout.addView(checkLayout);
+                    layoutQuestion.addView(choicesLayout);
+                } else {
+                    /*
+                    TODO RADIOBUTTON NE FONCTIONNE PAS
+                     nécessaire de créer son propre RadioButton
+                     (il est nécessaire que les RadioButtons soient les enfants directs d'un RadioGroup)
+                    */
+                    RadioGroup choicesLayout = new RadioGroup(VoteActivity.this);
+                    for (Choice choice : choices) {
+                        LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
+                        TextView answerDynamic = new TextView(VoteActivity.this);
+                        answerDynamic.setWidth(48);
+                        answerDynamic.setHeight(48);
+                        answerDynamic.setEms(10);
+                        answerDynamic.setText(choice.getText());
+                        answerDynamic.setTextSize(14);
+                        choiceLayout.addView(answerDynamic);
+                        RadioButton choiceRadioButton = new RadioButton(VoteActivity.this);
+                        choiceLayout.addView(choiceRadioButton);
+                        choicesLayout.addView(choiceLayout);
+                    }
+                    layoutQuestion.addView(choicesLayout);
                 }
+                linearParent.addView(layoutQuestion);
             }
         }
         initButtonVote();
@@ -78,8 +123,6 @@ public class VoteActivity extends Activity {
                 startActivity(myIntent);
             }
         });
-
-        buttonSendPoll = findViewById(R.id.deletePoll);
 
 
     }

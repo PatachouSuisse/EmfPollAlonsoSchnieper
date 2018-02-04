@@ -63,7 +63,7 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
-                android:id="@+id/layoutnew"
+                android:id="@+id/layoutpoll"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 android:layout_weight="1"

@@ -66,7 +66,7 @@ public class NewActivity extends AppCompatActivity {
      * Cette méthode permet de créer les champs réponse de façon dynamique
      */
     private void addAnswerField() {
-        final LinearLayout linearParent = (LinearLayout) findViewById(R.id.layoutnew);
+        final LinearLayout linearParent = (LinearLayout) findViewById(R.id.layoutpoll);
 
         //création du edit
         final EditText answerDynamic = new EditText(NewActivity.this);

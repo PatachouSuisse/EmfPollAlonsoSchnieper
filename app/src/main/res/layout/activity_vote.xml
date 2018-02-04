@@ -34,7 +34,7 @@
                     android:layout_width="331dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Aimez-vous emfpoll  ?"
+                    android:text="Aimez-vous emfpoll ?"
                     android:textColor="@android:color/background_dark"
                     android:textSize="19sp"
                     android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
-                android:id="@+id/layoutnew"
+                android:id="@+id/layoutpoll"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 android:layout_weight="1"
