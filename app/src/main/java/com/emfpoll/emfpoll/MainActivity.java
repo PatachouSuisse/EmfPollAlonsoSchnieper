@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
@@ -79,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
         buttonGoHome.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 Log.d(LOG_TAG, "============================ start Home load");
-
-
                 // Start NewActivity.class
                 Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(myIntent);

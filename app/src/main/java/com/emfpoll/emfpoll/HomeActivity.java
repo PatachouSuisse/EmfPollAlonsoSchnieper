@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emfpoll.emfpoll.beans.Survey;
 import com.emfpoll.emfpoll.tasks.GetSurveyListTask;
@@ -65,8 +66,11 @@ public class HomeActivity extends Activity {
                 tl.addView(tr);
             }
         } catch (InterruptedException e) {
+            Toast.makeText(this, "Une erreur c'est produit, InterruptedException :(", Toast.LENGTH_LONG).show();
+
             e.printStackTrace();
         } catch (ExecutionException e) {
+            Toast.makeText(this, "Une erreur c'est produit, ExecutionException :(", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

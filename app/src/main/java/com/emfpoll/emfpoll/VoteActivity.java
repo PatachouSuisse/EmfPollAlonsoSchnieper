@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
@@ -108,9 +109,12 @@ public class VoteActivity extends Activity {
                 }
                 linearParent.addView(layoutQuestion);
             }
+            initButtonVote();
+            Log.d(LOG_TAG, "============================ vote loaded");
+            Toast.makeText(this, "Vote chargé", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Une erreur c'est produit, le sondage est vide :(", Toast.LENGTH_LONG).show();
         }
-        initButtonVote();
-        Log.d(LOG_TAG, "============================ vote loaded");
     }
 
     //Charge les boutons de l'ihm principale HOME
@@ -123,7 +127,5 @@ public class VoteActivity extends Activity {
                 startActivity(myIntent);
             }
         });
-
-
     }
 }
