@@ -87,11 +87,11 @@
                         android:layout_weight="1" />
 
                     <Button
-                        android:id="@+id/createPoll"
+                        android:id="@+id/vote"
                         android:layout_width="210dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Créer" />
+                        android:text="Voter" />
 
                     <Space
                         android:layout_width="97dp"

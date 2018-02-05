@@ -19,6 +19,11 @@ public class Choice {
         this.pkChoice = pkChoice;
     }
 
+    public Choice(int pkChoice, Question question) {
+        this.pkChoice = pkChoice;
+        this.question = question;
+    }
+
     public Choice(String text, Question question, ArrayList<Vote> votes) {
         this.text = text;
         this.question = question;

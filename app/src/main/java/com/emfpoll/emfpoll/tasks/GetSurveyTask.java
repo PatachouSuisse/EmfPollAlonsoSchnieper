@@ -3,6 +3,7 @@ package com.emfpoll.emfpoll.tasks;
 import android.os.AsyncTask;
 
 import com.emfpoll.emfpoll.beans.Survey;
+import com.emfpoll.emfpoll.exceptions.AlreadyVotedException;
 import com.emfpoll.emfpoll.wrk.WrkDB;
 
 /**

@@ -32,9 +32,14 @@ public class AnswerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
-        initSurvey(getIntent().getIntExtra("pk_survey", -1));
         initButtonAnswer();
         Log.d(LOG_TAG, "============================ Answer loaded");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initSurvey(getIntent().getIntExtra("pk_survey", -1));
     }
 
     private void initSurvey(int pk_survey) {
@@ -44,6 +49,7 @@ public class AnswerActivity extends Activity {
             TextView questionLabel = findViewById(R.id.questionLabel);
             questionLabel.setText(poll.getName());
             LinearLayout layoutPoll = findViewById(R.id.layoutanswer);
+            layoutPoll.removeAllViews();
             for(Question question : poll.getQuestions()) {
                 LinearLayout layoutQuestion = new LinearLayout(AnswerActivity.this);
                 layoutQuestion.setOrientation(LinearLayout.VERTICAL);

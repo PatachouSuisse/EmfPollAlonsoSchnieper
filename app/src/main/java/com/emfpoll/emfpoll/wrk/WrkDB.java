@@ -8,6 +8,7 @@ import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
 import com.emfpoll.emfpoll.beans.Vote;
+import com.emfpoll.emfpoll.exceptions.AlreadyVotedException;
 import com.mysql.jdbc.Statement;
 
 import java.sql.Connection;
@@ -149,7 +150,30 @@ public class WrkDB {
         return ps;
     }
 
-    public boolean vote(ArrayList<Vote> votes) {
+    /**
+     * Cette méthode insère plusieurs votes du même utilisateur.
+     *
+     * @param votes
+     * @return
+     * @throws AlreadyVotedException
+     */
+    public boolean vote(ArrayList<Vote> votes) throws AlreadyVotedException {
+        if(votes.size() == 0) return true;
+        Log.i(LOG_TAG, "================ TEST DE PERMISSION... =================");
+        try {
+            ResultSet rs = select("SELECT DISTINCT fk_question FROM r_vote INNER JOIN t_choice ON fk_choice = pk_choice WHERE visitorid = ?", votes.get(0).getVisitorid());
+            ArrayList<Integer> fk_questions = new ArrayList<>();
+            while(rs.next()) {
+                fk_questions.add(rs.getInt("fk_question"));
+            }
+            for(Vote vote : votes) {
+                if(fk_questions.contains(vote.getChoice().getQuestion().getPkQuestion())) {
+                    throw new AlreadyVotedException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Log.i(LOG_TAG, "================ INSERTION VOTE... =================");
         boolean success = false;
         try {

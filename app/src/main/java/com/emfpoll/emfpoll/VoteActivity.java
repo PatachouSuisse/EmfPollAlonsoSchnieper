@@ -3,20 +3,25 @@ package com.emfpoll.emfpoll;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.Checkable;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
+import com.emfpoll.emfpoll.beans.Vote;
+import com.emfpoll.emfpoll.components.MyRadioGroup;
+import com.emfpoll.emfpoll.exceptions.AlreadyVotedException;
 import com.emfpoll.emfpoll.tasks.GetSurveyTask;
+import com.emfpoll.emfpoll.tasks.VoteTask;
 import com.emfpoll.emfpoll.wrk.WrkDB;
 
 import java.util.ArrayList;
@@ -28,7 +33,8 @@ public class VoteActivity extends Activity {
     private WrkDB wrkDb;
     private int a = 0;
     Button buttonGoHome;
-    Button buttonSendPoll;
+    Button buttonVote;
+    private Survey survey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class VoteActivity extends Activity {
         setContentView(R.layout.activity_vote);
 
         wrkDb = WrkDB.getInstance();
-        Survey survey = null;
+        survey = null;
         try {
             survey = new GetSurveyTask().execute(getIntent().getIntExtra("pk_survey", -1)).get();
         } catch (InterruptedException e) {
@@ -57,20 +63,16 @@ public class VoteActivity extends Activity {
             for (Question question : questions) {
                 LinearLayout layoutQuestion = new LinearLayout(VoteActivity.this);
                 layoutQuestion.setOrientation(LinearLayout.VERTICAL);
+                layoutQuestion.setId(question.getPkQuestion());
                 final TextView questionTextView = new TextView(VoteActivity.this);
                 questionTextView.setText(question.getTitle());
                 layoutQuestion.addView(questionTextView);
                 //Choix dynamique
-                ArrayList<Choice> choices = question.getChoices();
-                //TODO utiliser un layout pour les choix ou prendre le premier enfant comme titre ?
                 if(question.isMultiple()) {
-                    //TODO aligner question et checkbox
                     LinearLayout choicesLayout = new LinearLayout(VoteActivity.this);
-                    LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
-                    choiceLayout.setOrientation(LinearLayout.VERTICAL);
-                    LinearLayout checkLayout = new LinearLayout(VoteActivity.this);
-                    checkLayout.setOrientation(LinearLayout.VERTICAL);
-                    for (Choice choice : choices) {
+                    choicesLayout.setOrientation(LinearLayout.VERTICAL);
+                    for (Choice choice : question.getChoices()) {
+                        LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
                         TextView answerDynamic = new TextView(VoteActivity.this);
                         answerDynamic.setWidth(48);
                         answerDynamic.setHeight(48);
@@ -79,19 +81,15 @@ public class VoteActivity extends Activity {
                         answerDynamic.setTextSize(14);
                         choiceLayout.addView(answerDynamic);
                         CheckBox choiceCheckBox = new CheckBox(VoteActivity.this);
-                        checkLayout.addView(choiceCheckBox);
+                        choiceCheckBox.setId(choice.getPkChoice());
+                        choiceLayout.addView(choiceCheckBox);
+                        choicesLayout.addView(choiceLayout);
                     }
-                    choicesLayout.addView(choiceLayout);
-                    choicesLayout.addView(checkLayout);
                     layoutQuestion.addView(choicesLayout);
                 } else {
-                    /*
-                    TODO RADIOBUTTON NE FONCTIONNE PAS
-                     nécessaire de créer son propre RadioButton
-                     (il est nécessaire que les RadioButtons soient les enfants directs d'un RadioGroup)
-                    */
-                    RadioGroup choicesLayout = new RadioGroup(VoteActivity.this);
-                    for (Choice choice : choices) {
+                    MyRadioGroup choicesLayout = new MyRadioGroup(VoteActivity.this);
+                    choicesLayout.setOrientation(LinearLayout.VERTICAL);
+                    for (Choice choice : question.getChoices()) {
                         LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
                         TextView answerDynamic = new TextView(VoteActivity.this);
                         answerDynamic.setWidth(48);
@@ -101,6 +99,7 @@ public class VoteActivity extends Activity {
                         answerDynamic.setTextSize(14);
                         choiceLayout.addView(answerDynamic);
                         RadioButton choiceRadioButton = new RadioButton(VoteActivity.this);
+                        choiceRadioButton.setId(choice.getPkChoice());
                         choiceLayout.addView(choiceRadioButton);
                         choicesLayout.addView(choiceLayout);
                     }
@@ -113,8 +112,8 @@ public class VoteActivity extends Activity {
         Log.d(LOG_TAG, "============================ vote loaded");
     }
 
-    //Charge les boutons de l'ihm principale HOME
-    public void initButtonVote() {
+    //Charge les boutons de l'ihm vote
+    private void initButtonVote() {
         buttonGoHome = findViewById(R.id.goHomeVote);
         buttonGoHome.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -124,6 +123,61 @@ public class VoteActivity extends Activity {
             }
         });
 
-
+        buttonVote = findViewById(R.id.vote);
+        buttonVote.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                ArrayList<Vote> votes = new ArrayList<>();
+                ArrayList<Question> questions = survey.getQuestions();
+                boolean emptyQuestions = false;
+                for (int i = 0; i < questions.size(); i++) {
+                    Question q = questions.get(i);
+                    String androidId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                    LinearLayout layoutPoll = findViewById(R.id.layoutpoll);
+                    LinearLayout layoutQuestion = (LinearLayout) layoutPoll.getChildAt(i);
+                    if (q.isMultiple()) {
+                        LinearLayout layoutChoices = (LinearLayout) layoutQuestion.getChildAt(1);
+                        for (int j = 0; j < layoutQuestion.getChildCount(); j++) {
+                            LinearLayout layoutChoice = (LinearLayout) layoutChoices.getChildAt(j);
+                            CheckBox checkBoxChoice = (CheckBox) layoutChoice.getChildAt(1);
+                            if (checkBoxChoice.isChecked()) {
+                                votes.add(new Vote(new Choice(checkBoxChoice.getId(), new Question(layoutQuestion.getId())), androidId));
+                            }
+                        }
+                    } else {
+                        MyRadioGroup layoutChoices = (MyRadioGroup) layoutQuestion.getChildAt(1);
+                        int checkedRadioButtonId = layoutChoices.getCheckedRadioButtonId();
+                        Log.i(LOG_TAG, checkedRadioButtonId + " est choisi");
+                        if (checkedRadioButtonId != -1) {
+                            votes.add(new Vote(new Choice(checkedRadioButtonId, new Question(layoutQuestion.getId())), androidId));
+                        } else {
+                            emptyQuestions = true;
+                            break;
+                        }
+                    }
+                }
+                if (emptyQuestions) {
+                    //TODO afficher toast
+                } else {
+                    Boolean success = false;
+                    try {
+                        success = new VoteTask().execute(votes).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    if (success == null) {
+                        //TODO afficher toast
+                    } else if (success) {
+                        // Start AnswerActivity.class
+                        Intent myIntent = new Intent(VoteActivity.this, AnswerActivity.class);
+                        myIntent.putExtra("pk_survey", survey.getPkSurvey());
+                        startActivity(myIntent);
+                    } else {
+                        Log.w(LOG_TAG, "Les votes n'ont pas pu être insérés !");
+                    }
+                }
+            }
+        });
     }
 }
