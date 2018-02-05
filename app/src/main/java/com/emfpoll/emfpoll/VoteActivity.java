@@ -43,7 +43,7 @@ public class VoteActivity extends Activity {
         setContentView(R.layout.activity_vote);
 
         wrkDb = WrkDB.getInstance();
-        Survey survey = null;
+        survey = null;
         try {
             survey = new GetSurveyTask().execute(getIntent().getIntExtra("pk_survey", -1)).get();
         } catch (InterruptedException e) {
