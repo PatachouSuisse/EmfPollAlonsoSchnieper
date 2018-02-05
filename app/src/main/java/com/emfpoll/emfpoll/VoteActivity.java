@@ -13,6 +13,7 @@ import android.widget.Checkable;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
@@ -42,7 +43,7 @@ public class VoteActivity extends Activity {
         setContentView(R.layout.activity_vote);
 
         wrkDb = WrkDB.getInstance();
-        survey = null;
+        Survey survey = null;
         try {
             survey = new GetSurveyTask().execute(getIntent().getIntExtra("pk_survey", -1)).get();
         } catch (InterruptedException e) {
@@ -107,9 +108,12 @@ public class VoteActivity extends Activity {
                 }
                 linearParent.addView(layoutQuestion);
             }
+            initButtonVote();
+            Log.d(LOG_TAG, "============================ vote loaded");
+            Toast.makeText(this, "Vote chargé", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Une erreur c'est produit, le sondage est vide :(", Toast.LENGTH_LONG).show();
         }
-        initButtonVote();
-        Log.d(LOG_TAG, "============================ vote loaded");
     }
 
     //Charge les boutons de l'ihm vote
