@@ -1,5 +1,7 @@
 package com.emfpoll.emfpoll.tasks;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
