@@ -140,7 +140,7 @@ public class VoteActivity extends Activity {
                     LinearLayout layoutQuestion = (LinearLayout) layoutPoll.getChildAt(i);
                     if (q.isMultiple()) {
                         LinearLayout layoutChoices = (LinearLayout) layoutQuestion.getChildAt(1);
-                        for (int j = 0; j < layoutQuestion.getChildCount(); j++) {
+                        for (int j = 0; j < layoutChoices.getChildCount(); j++) {
                             LinearLayout layoutChoice = (LinearLayout) layoutChoices.getChildAt(j);
                             CheckBox checkBoxChoice = (CheckBox) layoutChoice.getChildAt(1);
                             if (checkBoxChoice.isChecked()) {
