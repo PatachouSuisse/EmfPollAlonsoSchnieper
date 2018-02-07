@@ -1,6 +1,8 @@
 package com.emfpoll.emfpoll;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -88,6 +90,21 @@ public class HomeActivity extends Activity {
                 if (!String.valueOf(codeInputText.getText()).equals("")){
                     myIntent.putExtra("pk_survey", Integer.parseInt(String.valueOf(codeInputText.getText())));
                     startActivity(myIntent);
+                }else{
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(HomeActivity.this);
+                    builder1.setMessage("Ca marche mieux avec un numéro de sondage :D");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Ouuups!",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                    Log.w(LOG_TAG, "Les votes n'ont pas pu être insérés !");
                 }
 
             }

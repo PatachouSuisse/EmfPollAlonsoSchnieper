@@ -1,7 +1,6 @@
 package com.emfpoll.emfpoll;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
@@ -21,7 +19,6 @@ import com.emfpoll.emfpoll.tasks.GetSurveyTask;
 import com.emfpoll.emfpoll.tasks.VoteTask;
 import com.emfpoll.emfpoll.wrk.WrkDB;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -49,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
         Log.d(LOG_TAG, "============================ Main loaded");
         if (dev) {
             //Application de débug
@@ -58,13 +54,14 @@ public class MainActivity extends AppCompatActivity {
             //Application Prod
             prodApp();
         }
+
     }
 
 
     //Init states
     private void devApp() {
         setContentView(R.layout.activity_main);
-                initButtonDev();
+        initButtonDev();
     }
 
     private void prodApp() {
@@ -176,16 +173,16 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(survey.getCreatorid());
                 System.out.println(survey.getPkSurvey());
                 System.out.println(survey.getStart());
-                for(Question q : survey.getQuestions()) {
+                for (Question q : survey.getQuestions()) {
                     System.out.println("QUESTION");
                     System.out.println(q);
                     System.out.println(q.getPkQuestion());
                     System.out.println(q.isMultiple());
-                    for(Choice c : q.getChoices()) {
+                    for (Choice c : q.getChoices()) {
                         System.out.println("CHOIX");
                         System.out.println(c);
                         System.out.println(c.getPkChoice());
-                        for(Vote v : c.getVotes()) {
+                        for (Vote v : c.getVotes()) {
                             System.out.println("VOTE");
                             System.out.println(v.getVisitorid());
                         }
