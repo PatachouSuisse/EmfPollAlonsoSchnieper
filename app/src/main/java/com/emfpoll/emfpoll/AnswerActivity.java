@@ -3,10 +3,7 @@ package com.emfpoll.emfpoll;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +16,6 @@ import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
 import com.emfpoll.emfpoll.tasks.GetSurveyTask;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -28,8 +23,7 @@ public class AnswerActivity extends Activity {
 
     private Survey poll;
 
-    private static final String LOG_TAG =
-            AnswerActivity.class.getSimpleName();
+    private static final String LOG_TAG = AnswerActivity.class.getSimpleName();
     Button buttonGoHome;
     Button buttonDeletePoll;
     Button buttonSharePoll;
