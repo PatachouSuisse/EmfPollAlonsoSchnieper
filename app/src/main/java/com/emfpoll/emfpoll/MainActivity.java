@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean dev = true;
+    private boolean dev = false;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button buttonGoHome;

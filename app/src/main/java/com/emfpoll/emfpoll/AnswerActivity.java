@@ -3,6 +3,8 @@ package com.emfpoll.emfpoll;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -77,14 +79,15 @@ public class AnswerActivity extends Activity {
                     for (Choice choice : question.getChoices()) {
                         LinearLayout choiceLayout = new LinearLayout(AnswerActivity.this);
                         TextView choiceText = new TextView(AnswerActivity.this);
-                        choiceText.setWidth(100);
-                        choiceText.setHeight(48);
                         choiceText.setEms(10);
                         choiceText.setTextSize(14);
                         choiceText.setText(choice.getText());
+                        View space = new View(AnswerActivity.this);
+                        space.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
                         TextView choiceVotes = new TextView(AnswerActivity.this);
                         choiceVotes.setText(choice.getVotes().size() + "");
                         choiceLayout.addView(choiceText);
+                        choiceLayout.addView(space);
                         choiceLayout.addView(choiceVotes);
                         layoutQuestion.addView(choiceLayout);
                     }

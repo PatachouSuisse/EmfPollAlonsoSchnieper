@@ -8,12 +8,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +70,8 @@ public class VoteActivity extends Activity {
             for (Question question : questions) {
                 LinearLayout layoutQuestion = new LinearLayout(VoteActivity.this);
                 layoutQuestion.setOrientation(LinearLayout.VERTICAL);
+                /*LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                layoutQuestion.setLayoutParams(lp);*/
                 layoutQuestion.setId(question.getPkQuestion());
                 final TextView questionTextView = new TextView(VoteActivity.this);
                 questionTextView.setText(question.getTitle());
@@ -78,12 +83,13 @@ public class VoteActivity extends Activity {
                     for (Choice choice : question.getChoices()) {
                         LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
                         TextView answerDynamic = new TextView(VoteActivity.this);
-                        answerDynamic.setWidth(48);
-                        answerDynamic.setHeight(48);
                         answerDynamic.setEms(10);
                         answerDynamic.setText(choice.getText());
                         answerDynamic.setTextSize(14);
                         choiceLayout.addView(answerDynamic);
+                        View space = new View(VoteActivity.this);
+                        space.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                        choiceLayout.addView(space);
                         CheckBox choiceCheckBox = new CheckBox(VoteActivity.this);
                         choiceCheckBox.setId(choice.getPkChoice());
                         choiceLayout.addView(choiceCheckBox);
@@ -96,12 +102,13 @@ public class VoteActivity extends Activity {
                     for (Choice choice : question.getChoices()) {
                         LinearLayout choiceLayout = new LinearLayout(VoteActivity.this);
                         TextView answerDynamic = new TextView(VoteActivity.this);
-                        answerDynamic.setWidth(48);
-                        answerDynamic.setHeight(48);
                         answerDynamic.setEms(10);
                         answerDynamic.setText(choice.getText());
                         answerDynamic.setTextSize(14);
                         choiceLayout.addView(answerDynamic);
+                        View space = new View(VoteActivity.this);
+                        space.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                        choiceLayout.addView(space);
                         RadioButton choiceRadioButton = new RadioButton(VoteActivity.this);
                         choiceRadioButton.setId(choice.getPkChoice());
                         choiceLayout.addView(choiceRadioButton);
@@ -158,7 +165,7 @@ public class VoteActivity extends Activity {
                         LinearLayout layoutChoices = (LinearLayout) layoutQuestion.getChildAt(1);
                         for (int j = 0; j < layoutChoices.getChildCount(); j++) {
                             LinearLayout layoutChoice = (LinearLayout) layoutChoices.getChildAt(j);
-                            CheckBox checkBoxChoice = (CheckBox) layoutChoice.getChildAt(1);
+                            CheckBox checkBoxChoice = (CheckBox) layoutChoice.getChildAt(2);
                             if (checkBoxChoice.isChecked()) {
                                 votes.add(new Vote(new Choice(checkBoxChoice.getId(), new Question(layoutQuestion.getId())), androidId));
                             }

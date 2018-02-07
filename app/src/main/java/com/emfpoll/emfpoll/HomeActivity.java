@@ -34,9 +34,14 @@ public class HomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        initPolls();
         initButtonHome();
         Log.d(LOG_TAG, "============================ Home loaded");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initPolls();
     }
 
     private void initPolls() {
