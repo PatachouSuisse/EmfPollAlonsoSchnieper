@@ -8,6 +8,8 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -192,10 +194,8 @@ public class NewActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 //teste si enter a été pressé et si le choix n'est pas vide
-                //TODO fixer si dernier de la question et il existe plusieurs questions
                 if ((event == null || actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN)
                         && !v.getText().toString().equals("")) {
-                    answerDynamic.setOnEditorActionListener(null);
                     if (ll.getChildAt(ll.getChildCount() - 1).equals(answerDynamic)) {
                         addAnswerField(ll).requestFocus();
                         return true;
@@ -204,6 +204,22 @@ public class NewActivity extends AppCompatActivity {
                 return false;
             }
         });
+        if(ll.getChildCount() > 0) {
+            answerDynamic.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if(keyCode == KeyEvent.KEYCODE_DEL) {
+                        String choiceText = ((EditText) v).getText().toString();
+                        if("".equals(choiceText)) {
+                            EditText lastEditText = (EditText) v.focusSearch(View.FOCUS_UP);
+                            lastEditText.requestFocus();
+                            ((ViewGroup) v.getParent()).removeView(v);
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
         ll.addView(answerDynamic);
         Log.d(LOG_TAG, "============================ NewPoll addAnswerField");
         return answerDynamic;
