@@ -56,6 +56,18 @@ public class WrkDB {
         }
     }
 
+    public Boolean close() {
+        boolean success = true;
+        try {
+            if(con != null && !con.isClosed()) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            success = false;
+        }
+        return success;
+    }
+
     private static class Holder {
         private static final WrkDB INSTANCE;
 
