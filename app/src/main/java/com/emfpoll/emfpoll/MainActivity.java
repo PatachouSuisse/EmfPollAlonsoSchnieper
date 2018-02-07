@@ -58,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        new CloseDBTask().execute();
-    }
-
     //Init states
     private void devApp() {
         setContentView(R.layout.activity_main);
