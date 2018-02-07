@@ -84,9 +84,12 @@ public class HomeActivity extends Activity {
                 Intent myIntent = new Intent(HomeActivity.this,
                         VoteActivity.class);
                 EditText codeInputText = findViewById(R.id.codeInputText);
-                //TODO catch parse exception
-                myIntent.putExtra("pk_survey", Integer.parseInt(String.valueOf(codeInputText.getText())));
-                startActivity(myIntent);
+                //TODO catch parse le if suffis ?
+                if (!String.valueOf(codeInputText.getText()).equals("")){
+                    myIntent.putExtra("pk_survey", Integer.parseInt(String.valueOf(codeInputText.getText())));
+                    startActivity(myIntent);
+                }
+
             }
         });
 

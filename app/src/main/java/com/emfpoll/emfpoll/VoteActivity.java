@@ -1,7 +1,10 @@
 package com.emfpoll.emfpoll;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -59,7 +62,7 @@ public class VoteActivity extends Activity {
             //création du champs du sondage
             final TextView pollTitle = (TextView) findViewById(R.id.questionLabel);
             pollTitle.setText(survey.getName());
-            //Question dynamique
+            //Questions dynamiques
             ArrayList<Question> questions = survey.getQuestions();
             for (Question question : questions) {
                 LinearLayout layoutQuestion = new LinearLayout(VoteActivity.this);
@@ -68,8 +71,8 @@ public class VoteActivity extends Activity {
                 final TextView questionTextView = new TextView(VoteActivity.this);
                 questionTextView.setText(question.getTitle());
                 layoutQuestion.addView(questionTextView);
-                //Choix dynamique
-                if(question.isMultiple()) {
+                //Choix dynamiques
+                if (question.isMultiple()) {
                     LinearLayout choicesLayout = new LinearLayout(VoteActivity.this);
                     choicesLayout.setOrientation(LinearLayout.VERTICAL);
                     for (Choice choice : question.getChoices()) {
@@ -111,8 +114,21 @@ public class VoteActivity extends Activity {
             initButtonVote();
             Log.d(LOG_TAG, "============================ vote loaded");
             Toast.makeText(this, "Vote chargé", Toast.LENGTH_LONG).show();
-        }else {
-            Toast.makeText(this, "Une erreur c'est produit, le sondage est vide :(", Toast.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(VoteActivity.this);
+            builder1.setMessage("Erreur 404 le sondage que vous essayez de contacter n'est malheureusement pas disponible, laissez un message après le bip... *bip*");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Je reviendrais plus tard !",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+            //Toast.makeText(this, "Une erreur c'est produit, le sondage est vide :(", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -160,7 +176,19 @@ public class VoteActivity extends Activity {
                     }
                 }
                 if (emptyQuestions) {
-                    //TODO afficher toast
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(VoteActivity.this);
+                    builder1.setMessage("Vous n'avez pas répondu à toutes les questions :'(");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Zut!",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
                 } else {
                     Boolean success = false;
                     try {
@@ -171,13 +199,53 @@ public class VoteActivity extends Activity {
                         e.printStackTrace();
                     }
                     if (success == null) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(VoteActivity.this);
+                        builder1.setMessage("Hop Hop Hop on vote pas 2 fois è_é");
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Hooo mince!",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
                         //TODO afficher toast
                     } else if (success) {
-                        // Start AnswerActivity.class
-                        Intent myIntent = new Intent(VoteActivity.this, AnswerActivity.class);
+                        final Intent myIntent = new Intent(VoteActivity.this, AnswerActivity.class);
                         myIntent.putExtra("pk_survey", survey.getPkSurvey());
-                        startActivity(myIntent);
+
+                        // Start AnswerActivity.class
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(VoteActivity.this);
+                        builder1.setMessage("Merci beaucoup pour ta participation ! T'es un chef :D");
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Je sais, je sais :P",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                        startActivity(myIntent);
+                                    }
+                                });
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
                     } else {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(VoteActivity.this);
+                        builder1.setMessage("Ho non ton vote n'as pas pu être pris en compte :/ On finit le café on est règle ça !");
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Zut!",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
                         Log.w(LOG_TAG, "Les votes n'ont pas pu être insérés !");
                     }
                 }
