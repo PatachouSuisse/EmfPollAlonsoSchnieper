@@ -13,6 +13,7 @@ import com.emfpoll.emfpoll.beans.Choice;
 import com.emfpoll.emfpoll.beans.Question;
 import com.emfpoll.emfpoll.beans.Survey;
 import com.emfpoll.emfpoll.beans.Vote;
+import com.emfpoll.emfpoll.tasks.CloseDBTask;
 import com.emfpoll.emfpoll.tasks.CreateSurveyTask;
 import com.emfpoll.emfpoll.tasks.GetSurveyListTask;
 import com.emfpoll.emfpoll.tasks.GetSurveyTask;
@@ -57,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        new CloseDBTask().execute();
+    }
 
     //Init states
     private void devApp() {
