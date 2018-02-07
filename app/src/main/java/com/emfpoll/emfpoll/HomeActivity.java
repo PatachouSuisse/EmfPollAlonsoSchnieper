@@ -92,7 +92,7 @@ public class HomeActivity extends Activity {
                         VoteActivity.class);
                 EditText codeInputText = findViewById(R.id.codeInputText);
                 //TODO catch parse le if suffis ?
-                if (!String.valueOf(codeInputText.getText()).equals("")){
+                if (String.valueOf(codeInputText.getText()).matches("[0-9]+") && !String.valueOf(codeInputText.getText()).equals("")){
                     myIntent.putExtra("pk_survey", Integer.parseInt(String.valueOf(codeInputText.getText())));
                     startActivity(myIntent);
                 }else{

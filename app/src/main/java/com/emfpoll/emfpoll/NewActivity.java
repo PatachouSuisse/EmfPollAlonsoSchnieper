@@ -1,5 +1,7 @@
 package com.emfpoll.emfpoll;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -113,10 +115,39 @@ public class NewActivity extends AppCompatActivity {
                         startActivity(myIntent);
                     } else {
                         //TODO toast fail
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(NewActivity.this);
+                        builder1.setMessage("Ho il semblerait qu'une erreur soit survenue :(");
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Je repasserais plus tard!",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+
+
                         Log.e(LOG_TAG, "Le poll n'a pas pu être inséré");
                     }
                 } else {
                     //TODO toast pas complet
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(NewActivity.this);
+                    builder1.setMessage("Votre Poll est bizzare... Vérifier que vous avez mis un titre et qu'il existe au moins 2 choix par question. /!\\");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Ouuups!",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
                     Log.e(LOG_TAG, "Il y a des données manquantes");
                 }
             }

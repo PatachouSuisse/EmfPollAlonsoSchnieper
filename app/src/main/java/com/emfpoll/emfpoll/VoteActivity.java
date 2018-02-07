@@ -131,6 +131,8 @@ public class VoteActivity extends Activity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            Intent myIntent = new Intent(VoteActivity.this, HomeActivity.class);
+                            startActivity(myIntent);
                         }
                     });
             AlertDialog alert11 = builder1.create();
